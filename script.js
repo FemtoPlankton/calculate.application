@@ -9,30 +9,39 @@ let pendingOperator = null;
 let shouldResetDisplay = false;
 
 function calculate(num1Str, operator, num2Str) {
-    const num1 = parseFloat(num1Str);
+    const num1 = parseFloat(displayOperand.textContent);
     const num2 = parseFloat(num2Str);
 
     if (isNaN(num1) || isNaN(num2)) {
-        console.error("無効な数値です:", num1Str, operator, num2Str)
+        console.error("無効な数値です:", displayOperand.textContent, operator, num2Str)
         return "Error";
     }
 
+    let result;
+
     switch (operator) {
         case "+":
-            console.log(operator + "で計算。 数値:", num1 + num2)
-            return num1 + num2;
-        case "-": return num1 - num2;
-        case "*": return num1 * num2;
+            result = num1 + num2;
+            break;
+        case "-":
+            result = num1 - num2;
+            break;
+        case "*":
+            result = num1 * num2;
+            break;
         case '/':
             if (num2 === 0) {
                 console.error("ゼロ除算エラー");
                 return "Error";
             }
-            return num1 / num2;
+            result = num1 / num2;
+            break;
         default:
             console.error("無効な演算子です:", operator);
             return "Error";
     }
+    console.log(operator, "で計算。結果:", result);
+    return result;
 }
 
 numberButtons.forEach(button => {
@@ -59,18 +68,28 @@ numberButtons.forEach(button => {
 operatorButtons.forEach(button => {
     button.addEventListener('click', (event) => {
         const clickedOperator = event.target.dataset.value;
+        
         if (pendingOperator === null && operand === null) {
             console.log("数値が保持されていません。");
             return;
         } else if (pendingOperator === null) {
             operand = displayNumber.textContent;
             pendingOperator = clickedOperator;
-            displayOperand.textContent = operand + clickedOperator;
-            console.log("最初の数値と演算子を保持:", displayNumber.textContent + clickedOperator);
+            if (pendingOperator === "*") {
+                displayOperand.textContent = operand + " ×";
+                console.log("最初の数値と演算子を保持:", displayNumber.textContent + " ×");
+            } else if (pendingOperator === "/") {
+                displayOperand.textContent = operand + " ÷";
+                console.log("最初の数値と演算子を保持:", displayNumber.textContent + " ÷");
+            } else {
+                displayOperand.textContent = operand + " " + clickedOperator;
+                console.log("最初の数値と演算子を保持:", displayNumber.textContent + " " +clickedOperator);
+            }
             displayNumber.textContent = "0";
             return;
         } else {
             calculate(operand, pendingOperator, displayNumber.textContent);
+            displayNumber.textContent = "0";
         };
     });
 });
