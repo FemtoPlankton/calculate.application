@@ -2,6 +2,11 @@
     background-color: lightgray;
 }
 
+body {
+    display: flex;
+    gap: 16px;
+}
+
 .grid-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -67,4 +72,17 @@
 
 .button:active {
     background-color: #f0f0f0;
+}
+
+.history-container {
+    width: fit-content;
+    height:fit-content;
+    display: none;
+}
+
+.history {
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 8px;
 }

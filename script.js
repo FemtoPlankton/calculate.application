@@ -5,12 +5,15 @@ const numberButtons = document.querySelectorAll('.number-button');
 const operatorButtons = document.querySelectorAll('.operator-button');
 
 let operand = null;
+let previousOperand = "0";
 let pendingOperator = null;
 let shouldResetDisplay = false;
 
 function calculate(num1Str, operator, num2Str) {
     const num1 = parseFloat(displayOperand.textContent);
     const num2 = parseFloat(num2Str);
+
+    previousOperand = displayOperand.textContent;
 
     if (isNaN(num1) || isNaN(num2)) {
         console.error("無効な数値です:", displayOperand.textContent, operator, num2Str)
@@ -48,17 +51,21 @@ numberButtons.forEach(button => {
     button.addEventListener('click', (event) => {
         const clickedNumber = event.target.dataset.value;
 
+        if (shouldResetDisplay) {
+            displayNumber.textContent = "0";
+            shouldResetDisplay = false;
+        }
+
         if (displayNumber.textContent === "0" && clickedNumber === "0") {
             console.log("一桁目に0が既に保持されています。");
             return;
         } else if (displayNumber.textContent === "0" && clickedNumber !== "0") {
-            displayNumber.textContent -= "0";
             displayNumber.textContent = clickedNumber;
             operand = displayNumber.textContent;
             console.log("数値が保持されました。:", clickedNumber)
             return;
         } else {
-            displayNumber.textContent += clickedNumber;
+            displayNumber.textContent =  displayNumber.textContent + clickedNumber;
             operand = displayNumber.textContent;
             console.log("数値が保持されました。:", clickedNumber)
         }
@@ -68,7 +75,7 @@ numberButtons.forEach(button => {
 operatorButtons.forEach(button => {
     button.addEventListener('click', (event) => {
         const clickedOperator = event.target.dataset.value;
-        
+
         if (pendingOperator === null && operand === null) {
             console.log("数値が保持されていません。");
             return;
@@ -88,8 +95,32 @@ operatorButtons.forEach(button => {
             displayNumber.textContent = "0";
             return;
         } else {
-            calculate(operand, pendingOperator, displayNumber.textContent);
-            displayNumber.textContent = "0";
+            const currentDisplay = displayNumber.textContent;
+            const result = calculate(operand, pendingOperator, currentDisplay);
+            const historyContainer = document.getElementById('history');
+            const history = document.querySelectorAll('.history');
+
+            if (result === "Error") {
+                displayNumber.textContent = "Error";
+                displayOperand.textContent = "";
+                operand = null;
+                pendingOperator = null;
+                shouldResetDisplay = true;
+            } else {
+                let displayOpSymbol = clickedOperator;
+                if (clickedOperator === "*") displayOpSymbol = "×";
+                if (clickedOperator === "/") displayOpSymbol = "÷";
+                
+                historyContainer.style.display = "block";
+                history.textContent = previousOperand + " " + currentDisplay + " = " + result;
+
+                displayOperand.textContent = result + " " + displayOpSymbol;
+                displayNumber.textContent = result;
+                operand = result.toString();
+                pendingOperator = clickedOperator;
+                shouldResetDisplay = true;
+                console.log("計算実行:", result, "次の演算子:", pendingOperator);
+            }
         };
     });
 });
