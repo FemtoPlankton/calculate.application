@@ -86,3 +86,16 @@ body {
     border-radius: 4px;
     padding: 8px;
 }
+
+.history-display {
+    white-space: pre-wrap;
+    background-color: white;
+}
+
+.reset-button {
+    all: unset;
+    background-color: white;
+    padding: 8px;
+    justify-content: end;
+    align-items: end;
+}

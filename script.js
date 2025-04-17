@@ -3,6 +3,7 @@ const displayOperand = document.getElementById('display-operand');
 const equalButton = document.getElementById('equal-button');
 const numberButtons = document.querySelectorAll('.number-button');
 const operatorButtons = document.querySelectorAll('.operator-button');
+const historyContainer = document.getElementById('history');
 const resetButton = document.getElementById('reset')
 
 let operand = null;
@@ -98,7 +99,6 @@ operatorButtons.forEach(button => {
         } else {
             const currentDisplay = displayNumber.textContent;
             const result = calculate(operand, pendingOperator, currentDisplay);
-            const historyContainer = document.getElementById('history');
             const history = document.querySelectorAll('.history');
 
             if (result === "Error") {
@@ -113,7 +113,7 @@ operatorButtons.forEach(button => {
                 if (clickedOperator === "/") displayOpSymbol = "÷";
                 
                 historyContainer.style.display = "block";
-                history.textContent = previousOperand + " " + currentDisplay + " = " + result;
+                historyDisplay.textContent += previousOperand + " " + currentDisplay + " = " + result + "\n";
 
                 displayOperand.textContent = result + " " + displayOpSymbol;
                 displayNumber.textContent = result;
@@ -126,8 +126,7 @@ operatorButtons.forEach(button => {
     });
 });
 
-resetButton.forEach(button => {
-    button.addEventListener('click', () => {
-
-    })
+resetButton.addEventListener('click', () => {
+    historyDisplay.textContent = '';
+    historyContainer.style.display = "none";
 })
