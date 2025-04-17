@@ -3,6 +3,7 @@ const displayOperand = document.getElementById('display-operand');
 const equalButton = document.getElementById('equal-button');
 const numberButtons = document.querySelectorAll('.number-button');
 const operatorButtons = document.querySelectorAll('.operator-button');
+const resetButton = document.getElementById('reset')
 
 let operand = null;
 let previousOperand = "0";
@@ -124,3 +125,9 @@ operatorButtons.forEach(button => {
         };
     });
 });
+
+resetButton.forEach(button => {
+    button.addEventListener('click', () => {
+
+    })
+})
