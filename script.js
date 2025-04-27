@@ -170,13 +170,16 @@ operatorButtons.forEach(button => {
                 }
             } else {
                 let replaceOperator = displayOperand.textContent.split(" ");
-                if (displayOperand.textContent.includes(clickedOperator)) {
-                    replaceOperator.splice(1, 1, clickedOperator);
 
-                    let displayOpSymbol = clickedOperator;
-                    if (clickedOperator === "*") displayOpSymbol = "×";
-                    if (clickedOperator === "/") displayOpSymbol = "÷";
-                }
+                let displayOpSymbol = clickedOperator;
+                if (clickedOperator === "*") displayOpSymbol = "×";
+                if (clickedOperator === "/") displayOpSymbol = "÷";
+
+                replaceOperator.splice(1, 1, displayOpSymbol);
+                displayOperand.textContent = replaceOperator.join(" ");
+                pendingOperator = clickedOperator;
+                
+
             }
         };
     });
@@ -206,6 +209,9 @@ equalButton.addEventListener('click', () => {
             const result = calculate(operand, pendingOperator, currentDisplay);
 
             let cycleDelete = historyDisplay.textContent.split('\n');
+            let displayOpSymbol = pendingOperator;
+            if (pendingOperator === "*") displayOpSymbol = "×";
+            if (pendingOperator === "/") displayOpSymbol = "÷";
 
             if (cycleDelete.length > 15) {
                 cycleDelete.splice(14, 1);
@@ -213,7 +219,7 @@ equalButton.addEventListener('click', () => {
             }
 
             historyContainer.style.display = "block";
-            historyDisplay.textContent = previousOperand + " " + pendingOperator + " " + displayNumber.textContent + " = " + result + "\n" + historyDisplay.textContent;
+            historyDisplay.textContent = previousOperand + " " + displayOpSymbol + " " + displayNumber.textContent + " = " + result + "\n" + historyDisplay.textContent;
             displayOperand.textContent = null;
             displayNumber.textContent = result;
 
